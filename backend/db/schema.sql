@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS tenants (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE,
+    status TEXT NOT NULL DEFAULT 'active'
+);
+
+CREATE TABLE IF NOT EXISTS patients (
+    id TEXT PRIMARY KEY,
+    tenant_id TEXT NOT NULL,
+    external_ref TEXT NOT NULL,
+    display_name TEXT NOT NULL,
+    dob DATE NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS audit_log (
+    id TEXT PRIMARY KEY,
+    tenant_id TEXT NOT NULL,
+    actor_midwife_id TEXT,
+    action TEXT NOT NULL,
+    meta TEXT,
+    at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: midwife-postgres
+    environment:
+      POSTGRES_DB: midwife
+      POSTGRES_USER: midwife
+      POSTGRES_PASSWORD: change-me
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  midwife-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: midwife-api
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      DATABASE_URL: postgresql+psycopg2://midwife:change-me@postgres:5432/midwife
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
